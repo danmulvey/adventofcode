@@ -44,22 +44,35 @@ function checkHouse(pos, visited) {
 /**
  *  deliver the presents!
  *  @param {Array} directions
+ *  @param {Number} santas
  *  @return {Number} how many houses we've visited
  */
-function deliverPresents(directions) {
+function deliverPresents(directions, santas) {
 	var visited = [];
-	var position = [0,0];
+	var position = [];
 	
-	visited.push([position[0], position[1]]);
-	
-	for (var i = 0; i < directions.length; i++) {
-		getNextHouse(position, directions[i]);
-		if (!checkHouse(position, visited)) {
-			visited.push([position[0], position[1]]);
-		}
+	// set the starting position for each santa
+	for (var i = 0; i < santas; i++) {
+		position[i] = [0,0];
 	}
 	
+	// add the starting position to our list of visited houses
+	visited.push([position[0][0], position[0][1]]);
+	
+	// process each direction in the list
+	for (var i = 0; i < directions.length; i += santas) {
+		// move each santa in the proper direction
+		for (var j = 0; j < santas; j++) {
+			getNextHouse(position[j], directions[i+j]);
+			// if this is a new house, add it to the visited list
+			if (!checkHouse(position[j], visited)) {
+				visited.push([position[j][0], position[j][1]]);
+			}
+		}
+	}
+	// return the number of unique houses we've visited
 	return visited.length;
 }
 
-console.log(deliverPresents(input));
+console.log(deliverPresents(input, 1));
+console.log(deliverPresents(input, 2));
