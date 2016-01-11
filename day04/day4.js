@@ -1,17 +1,19 @@
 var crypto = require('crypto');
-
 var input = "bgvyzdsv";
-var result = 0;
-var begin = "00000";
-var success = false;
 
-// starting at input + zero, find the first md5 hash that begins with 5 zeros
-while (!success) {
-	if (crypto.createHash('md5').update(input + result.toString()).digest('hex').startsWith(begin)) {
-		success = true;
-	} else {
-		result++;
+function findHash(start, beginsWith) {
+	// starting at input + zero, find the first md5 hash that begins with "beginsWith"
+	var success = false;
+	while (!success) {
+		if (crypto.createHash('md5').update(input + start.toString()).digest('hex').startsWith(beginsWith)) {
+			success = true;
+		} else {
+			start++;
+		}
 	}
+	
+	return start;
 }
 
-console.log(result);
+console.log("Part 1: " + findHash(0, "00000"));
+console.log("Part 2: " + findHash(0, "000000"));
